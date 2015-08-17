@@ -1,19 +1,24 @@
 include_recipe 'runit'
 
-user 'logstash user' do
-  username node['logstash']['user']
-  comment 'Logstash User'
-  home "#{node['logstash']['prefix_root']}/logstash"
-  shell '/bin/bash'
-  supports manage_home: false
-  action :create
-  system true
+unless node['logstash']['user'] == 'root'
+  user 'logstash user' do
+    username node['logstash']['user']
+    comment 'Logstash User'
+    home "#{node['logstash']['prefix_root']}/logstash"
+    shell '/bin/bash'
+    supports manage_home: false
+    action :create
+    system true
+  end
 end
 
-group 'logstash group' do
-  group_name node['logstash']['group']
-  action :create
-  system true
+
+unless node['logstash']['group'] == 'root'
+  group 'logstash group' do
+    group_name node['logstash']['group']
+    action :create
+    system true
+  end
 end
 
 ark 'logstash' do
